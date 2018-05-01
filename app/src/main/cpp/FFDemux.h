@@ -20,8 +20,6 @@ public:
 
     FFDemux();
 
-    int totalMs;
-
 private:
     // 无参数的
     AVFormatContext *ic = 0;
