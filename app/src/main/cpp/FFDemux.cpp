@@ -42,12 +42,27 @@ XData FFDemux::Read(){
         av_packet_free(&pkt);
         return XData();
     }
-    XLOGI("pack size is %d ptss %lld", pkt->size, pkt->pts);
+//    XLOGI("pack size is %d ptss %lld", pkt->size, pkt->pts);
     d.data = (unsigned char *)(pkt);
     d.size = pkt->size;
 
 
     return d;
+}
+
+XParameter FFDemux::GetVPara() {
+    if (!ic){
+        return XParameter();
+    }
+    // 获取视频流索引
+    int re = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
+    if (re < 0){
+        XLOGE("av_find_best_stream failed");
+        return XParameter();
+    }
+    XParameter para;
+    para.para = ic->streams[re]->codecpar;
+    return para;
 }
 
 FFDemux::FFDemux() {

@@ -15,6 +15,8 @@ class FFDemux: public IDemux {
 public:
     // 打开文件或者流媒体 rtmp, http, rtsp
      bool Open(const char *url);
+
+    XParameter GetVPara();
     // 读取一帧数据，数据由调用者清理
     XData Read();
 
