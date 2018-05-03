@@ -44,7 +44,7 @@ bool FFDecode::SendPacket(XData pkt){
         return false;
     }
     int re = avcodec_send_packet(codec,(AVPacket *) pkt.data);
-    if (re != 0){
+    if (re  !=  0){
         return false;
     }
 

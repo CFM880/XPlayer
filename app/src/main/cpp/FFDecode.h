@@ -5,8 +5,6 @@
 #ifndef XPLAY_FFDECODE_H
 #define XPLAY_FFDECODE_H
 
-
-#include <libavutil/frame.h>
 #include "XParameter.h"
 #include "IDecode.h"
 

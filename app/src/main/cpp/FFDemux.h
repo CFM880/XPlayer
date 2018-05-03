@@ -17,6 +17,7 @@ public:
      bool Open(const char *url);
 
     XParameter GetVPara();
+    XParameter GetAPara();
     // 读取一帧数据，数据由调用者清理
     XData Read();
 
@@ -25,6 +26,9 @@ public:
 private:
     // 无参数的
     AVFormatContext *ic = 0;
+
+    int audioStream = 1;
+    int videoStream = 0;
 };
 
 
