@@ -24,7 +24,7 @@ public:
     // 总时长
     int totalMs;
 protected:
-    virtual void Main();
+    void Main();
 };
 
 

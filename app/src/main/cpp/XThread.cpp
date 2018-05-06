@@ -40,5 +40,3 @@ void  XThread::Stop(){
 
 
 }
-// 主函数入口
-void  Main() {};

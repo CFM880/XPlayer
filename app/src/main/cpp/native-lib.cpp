@@ -21,13 +21,20 @@ Java_com_cfm880_xplay_MainActivity_stringFromJNI(
     std::string hello = "Hello from C++";
     TestObs *obs = new TestObs();
     IDemux *de = new FFDemux();
-    de->AddObs(obs);
-    de->Open("/sdcard/video.mp4");
+//    de->AddObs(obs);
+    de->Open("/sdcard/v1080.mp4");
+
     IDecode *vdecode = new FFDecode();
     vdecode->Open(de->GetVPara());
+
+    IDecode *adecode = new FFDecode();
+    adecode->Open(de->GetAPara());
+    de->AddObs(vdecode);
+    de->AddObs(adecode);
+
     de->Start();
-    XSleep(3000);
-    de->Stop();
+    vdecode->Start();
+    adecode->Start();
 //    for (;;){
 //        XData d = de->Read();
 //        XLOGI("Read Package size %d", d.size);
