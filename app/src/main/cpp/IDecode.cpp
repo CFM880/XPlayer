@@ -5,16 +5,21 @@
 #include "IDecode.h"
 #include "XLog.h"
 
-void IDecode::Update(XData pkt) {
-    if (pkt.isAudio != isAudio) {
+//由主体notify的数据
+void IDecode::Update(XData pkt)
+{
+    if(pkt.isAudio != isAudio)
+    {
         return;
     }
-    while (!isExit) {
+    while (!isExit)
+    {
         packsMutex.lock();
-        packs.push_back(pkt);
-        packsMutex.unlock();
-        // 阻塞
-        if (packs.size() > maxList) {
+
+        //阻塞
+        if(packs.size() < maxList)
+        {
+            //生产者
             packs.push_back(pkt);
             packsMutex.unlock();
             break;
@@ -22,33 +27,42 @@ void IDecode::Update(XData pkt) {
         packsMutex.unlock();
         XSleep(1);
     }
+
+
 }
-void IDecode::Main() {
-    while (!isExit){
+
+void IDecode::Main()
+{
+    while(!isExit)
+    {
         packsMutex.lock();
-        if (packs.empty()){
+        if(packs.empty())
+        {
             packsMutex.unlock();
             XSleep(1);
             continue;
         }
-        // 取出packet
+        //取出packet 消费者
         XData pack = packs.front();
         packs.pop_front();
-        // 发送数据到解码线程，一次发送数据包，可能解码多个结果
-        if ( this->SendPacket(pack)){
-            while (!isExit){
-                // 获取解码数据
+
+        //发送数据到解码线程，一个数据包，可能解码多个结果
+        if(this->SendPacket(pack))
+        {
+            while(!isExit)
+            {
+                //获取解码数据
                 XData frame = RecvFrame();
-                if (!frame.data) break;
-                // 发送数据到观察者；
-                XLOGE("Recv %d ", frame.size);
+                if(!frame.data) break;
+                XLOGE("RecvFrame %d",frame.size);
+
+                //发送数据给观察者
                 this->Notify(frame);
+
             }
 
         }
         pack.Drop();
         packsMutex.unlock();
-
     }
-
 }
