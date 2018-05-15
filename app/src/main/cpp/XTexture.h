@@ -7,6 +7,10 @@
 
 
 class XTexture {
+public:
+    static XTexture *Create();
+    virtual bool Init(void *win) = 0;
+
 
 };
 
