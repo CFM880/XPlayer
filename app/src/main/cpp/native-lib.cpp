@@ -1,10 +1,12 @@
 #include <jni.h>
 #include <string>
+#include <android/native_window_jni.h>
 
 #include "FFDemux.h"
 #include "XLog.h"
 #include "IDecode.h"
 #include "FFDecode.h"
+#include "XEGL.h"
 
 class TestObs : public IObserver{
 public:
@@ -41,4 +43,12 @@ Java_com_cfm880_xplay_MainActivity_stringFromJNI(
 //    }
 
     return env->NewStringUTF(hello.c_str());
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_cfm880_xplay_XPlay_initView__Ljava_lang_Object_2(JNIEnv *env, jobject instance,
+                                                          jobject surface) {
+    ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
+    XEGL::Get()->Init(win);
+
 }
