@@ -138,5 +138,47 @@ bool XShader::Init(){
     glUniform1i(glGetUniformLocation(program, "uTexture"),1);// 对应到第二次
     glUniform1i(glGetUniformLocation(program, "vTexture"),2);// 对应到第三次
     XLOGD("初始化shader success");
+    return true;
+}
 
+
+void XShader::Draw() {
+    if (!program){
+        return;
+    }
+    // 绘制存放的顶点数据
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void XShader::GetTexture(unsigned int index, int width, int height, unsigned char *buf){
+    if (texts[index] == 0){
+        // 材质初始化
+        // 创建1个纹理
+        glGenTextures(1,&texts[index]);
+        // 设置纹理属性
+        glBindTexture(GL_TEXTURE_2D, texts[index]);
+        // 缩小过滤器
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // 设置纹理的格式和大小
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,  // 细节基本0默认
+                     GL_LUMINANCE, //内部格式,亮度，灰度图
+                     width, height,       // 尺寸是2的次方拉伸到全屏
+                     0,                       // 边框
+                     GL_LUMINANCE, // 数据的像素的格式亮度，灰度图，要与上面一值
+                     GL_UNSIGNED_BYTE, // 像素的数据类型
+                     NULL  //纹理的数据
+        );
+
+
+        // 具体的显示
+
+        // 第一层纹理， 绑定到创建的opengl纹理
+        glActiveTexture(GL_TEXTURE0 + index);
+        glBindTexture(GL_TEXTURE_2D, texts[index]);
+
+        // 替换纹理
+        glTexSubImage2D(GL_TEXTURE_2D,0,0,0,width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, buf);
+    }
 }

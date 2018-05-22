@@ -12,6 +12,11 @@ public:
     EGLDisplay  display = EGL_NO_DISPLAY; // 显示设备是否正常
     EGLSurface  surface = EGL_NO_SURFACE; // surface判断是否成功
     EGLContext  context = EGL_NO_CONTEXT;
+
+    virtual void Draw(){
+        if (display == EGL_NO_DISPLAY && surface == EGL_NO_SURFACE) return;
+        eglSwapBuffers(display, surface);
+    }
     virtual bool Init(void *win){
         ANativeWindow *nwin = (ANativeWindow *)(win);
         // 初始化EGL

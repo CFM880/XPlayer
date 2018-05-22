@@ -3,6 +3,7 @@ package com.cfm880.xplay;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -30,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText("");
-        checkAndRequestPermission();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            checkAndRequestPermission();
+        } else {
+            stringFromJNI();
+        }
     }
 
     /**
