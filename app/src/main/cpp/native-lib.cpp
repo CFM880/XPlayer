@@ -26,9 +26,17 @@ Java_com_cfm880_xplay_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
-    TestObs *obs = new TestObs();
+
+    //XLOGI("S begin!");
+    //XSleep(3000);
+    //XLOGI("S end!");
+    //return env->NewStringUTF(hello.c_str());
+
+    ///////////////////////////////////
+    ///测试用代码
+    TestObs *tobs = new TestObs();
     IDemux *de = new FFDemux();
-//    de->AddObs(obs);
+    //de->AddObs(tobs);
     de->Open("/sdcard/v1080.mp4");
 
     IDecode *vdecode = new FFDecode();
@@ -42,20 +50,31 @@ Java_com_cfm880_xplay_MainActivity_stringFromJNI(
     view = new GLVideoView();
     vdecode->AddObs(view);
 
+//    IResample *resample = new FFResample();
+//    resample->Open(de->GetAPara());
+//    adecode->AddObs(resample);
 
+
+    //vdecode->Open();
     de->Start();
     vdecode->Start();
     adecode->Start();
-//    for (;;){
-//        XData d = de->Read();
-//        XLOGI("Read Package size %d", d.size);
-//    }
+
+    //XSleep(3000);
+    //de->Stop();
+    /*for(;;)
+    {
+        XData d = de->Read();
+        XLOGI("Read data size is %d",d.size);
+
+
+    }*/
 
     return env->NewStringUTF(hello.c_str());
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_cfm880_xplay_XPlay_initView__Ljava_lang_Object_2(JNIEnv *env, jobject instance,
+Java_com_cfm880_xplay_XPlay_initView(JNIEnv *env, jobject instance,
                                                           jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
     view->SetRender(win);

@@ -11,7 +11,7 @@ extern "C" {
 
 // 打开文件或者流媒体 rtmp, http, rtsp
 bool FFDemux::Open(const char *url){
-    XLOGI("Open file % s begin", url);
+    XLOGI("Open file %s begin", url);
     int re = avformat_open_input(&ic, url, 0, 0);
     if (re != 0){
         char buf[1024] = {0};

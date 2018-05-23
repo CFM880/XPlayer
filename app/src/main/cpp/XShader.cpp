@@ -10,11 +10,11 @@
 #define GET_STX(x) #x
 static const char *vertexShader = GET_STX(
         attribute vec4 aPosition; // 顶点坐标
-        attribute vec2 aTextColor; // 材质顶点坐标
+        attribute vec2 aTexCoord; // 材质顶点坐标
         varying vec2 vTexCoord;  // 输出的材质坐标
 
         void main(){
-            vTexCoord = vec2(aTextColor.x, 1.0-aTextColor.y);
+            vTexCoord = vec2(aTexCoord.x, 1.0-aTexCoord.y);
             gl_Position = aPosition;
         }
 );
