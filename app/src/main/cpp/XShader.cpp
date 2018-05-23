@@ -170,15 +170,10 @@ void XShader::GetTexture(unsigned int index, int width, int height, unsigned cha
                      GL_UNSIGNED_BYTE, // 像素的数据类型
                      NULL  //纹理的数据
         );
-
-
-        // 具体的显示
-
-        // 第一层纹理， 绑定到创建的opengl纹理
-        glActiveTexture(GL_TEXTURE0 + index);
-        glBindTexture(GL_TEXTURE_2D, texts[index]);
-
-        // 替换纹理
-        glTexSubImage2D(GL_TEXTURE_2D,0,0,0,width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, buf);
     }
+    //激活第1层纹理,绑定到创建的opengl纹理
+    glActiveTexture(GL_TEXTURE0+index);
+    glBindTexture(GL_TEXTURE_2D,texts[index]);
+    //替换纹理内容
+    glTexSubImage2D(GL_TEXTURE_2D,0,0,0,width,height,GL_LUMINANCE,GL_UNSIGNED_BYTE,buf);
 }
