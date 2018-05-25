@@ -54,7 +54,7 @@ void IDecode::Main()
                 //获取解码数据
                 XData frame = RecvFrame();
                 if(!frame.data) break;
-                XLOGE("RecvFrame %d",frame.size);
+//                XLOGE("RecvFrame %d",frame.size);
 
                 //发送数据给观察者
                 this->Notify(frame);

@@ -21,6 +21,7 @@ public class XPlay extends GLSurfaceView implements SurfaceHolder.Callback, GLSu
     public void surfaceCreated(SurfaceHolder holder){
         // 与openegl通信
         initView(holder.getSurface());
+        // android8.0有问题
         setRenderer(this);
     }
 
