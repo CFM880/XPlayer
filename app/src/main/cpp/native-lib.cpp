@@ -26,6 +26,8 @@ extern "C"
 JNIEXPORT
 jint  JNI_OnLoad(JavaVM *vm, void *res){
     FFDecode::InitHard(vm);
+
+
     ///////////////////////////////////
     ///测试用代码
     TestObs *tobs = new TestObs();
@@ -34,7 +36,8 @@ jint  JNI_OnLoad(JavaVM *vm, void *res){
     de->Open("/sdcard/v1080.mp4");
 
     IDecode *vdecode = new FFDecode();
-    vdecode->Open(de->GetVPara(), true);
+    //vdecode->Open(de->GetVPara(), true);
+    vdecode->Open(de->GetVPara(), false);
 
     IDecode *adecode = new FFDecode();
     adecode->Open(de->GetAPara());
@@ -45,12 +48,13 @@ jint  JNI_OnLoad(JavaVM *vm, void *res){
     vdecode->AddObs(view);
 
     IResample *resample = new FFResample();
-    XParameter outPata = de->GetAPara();
-    resample->Open(de->GetAPara(), outPata);
+    XParameter outPara = de->GetAPara();
+
+    resample->Open(de->GetAPara(),outPara);
     adecode->AddObs(resample);
 
     IAudioPlay *audioPlay = new SLAudioPlay();
-    audioPlay->StartPlay(outPata);
+    audioPlay->StartPlay(outPara);
     resample->AddObs(audioPlay);
 
 
@@ -58,16 +62,6 @@ jint  JNI_OnLoad(JavaVM *vm, void *res){
     de->Start();
     vdecode->Start();
     adecode->Start();
-
-    //XSleep(3000);
-    //de->Stop();
-    /*for(;;)
-    {
-        XData d = de->Read();
-        XLOGI("Read data size is %d",d.size);
-
-
-    }*/
 
     return JNI_VERSION_1_4;
 }

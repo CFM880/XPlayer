@@ -41,6 +41,48 @@ static const char *fragYUV420p = GET_STX(
         }
 );
 
+// 片元着色器 软解码和部分x86硬解码
+static const char *fragNV12 = GET_STX(
+        precision mediump float;   // 精度
+        varying vec2 vTexCoord;  // 顶点着色器传递过来的坐标
+        uniform sampler2D yTexture;   // 输入的材质（不透明灰度，单像素）
+        uniform sampler2D uvTexture;
+
+        void main(){
+            vec3 yuv;
+            vec3 rgb;
+            yuv.r = texture2D(yTexture, vTexCoord).r;
+            yuv.g =  texture2D(uvTexture, vTexCoord).r - 0.5 ;
+            yuv.b =  texture2D(uvTexture, vTexCoord).a - 0.5 ;
+            rgb = mat3(1.0,         1.0,         1.0,
+                       0.0,         -0.39465,  2.03211,
+                       1.13983,   -0.5806,  0.0) *yuv;
+            // 输出像素颜色
+            gl_FragColor = vec4(rgb, 1.0);
+        }
+);
+
+// 片元着色器 软解码和部分x86硬解码
+static const char *fragNV21 = GET_STX(
+        precision mediump float;   // 精度
+        varying vec2 vTexCoord;  // 顶点着色器传递过来的坐标
+        uniform sampler2D yTexture;   // 输入的材质（不透明灰度，单像素）
+        uniform sampler2D vuTexture;
+
+        void main(){
+            vec3 yuv;
+            vec3 rgb;
+            yuv.r = texture2D(yTexture, vTexCoord).r;
+            yuv.g =  texture2D(vuTexture, vTexCoord).a - 0.5 ;
+            yuv.b =  texture2D(vuTexture, vTexCoord).r - 0.5 ;
+            rgb = mat3(1.0,         1.0,         1.0,
+                       0.0,         -0.39465,  2.03211,
+                       1.13983,   -0.5806,  0.0) *yuv;
+            // 输出像素颜色
+            gl_FragColor = vec4(rgb, 1.0);
+        }
+);
+
 static GLuint  InitShader(const char *code, GLint type)
 {
     // 创建shader
@@ -75,11 +117,26 @@ bool XShader::Init(XShaderType type){
     // 顶点和片元
     // 顶点shader初始化
     vsh = InitShader(vertexShader, GL_VERTEX_SHADER);
-    fsh = InitShader(fragYUV420p, GL_FRAGMENT_SHADER);
+
     if (vsh == 0){
         XLOGE("InitShader GL_VERTEX_SHADER failed");
     }
     XLOGE("InitShader GL_VERTEX_SHADER success");
+
+    switch (type){
+        case XSHADER_YUV420P:
+            fsh = InitShader(fragYUV420p, GL_FRAGMENT_SHADER);
+            break;
+        case XSHADER_NV12:
+            fsh = InitShader(fragNV12, GL_FRAGMENT_SHADER);
+            break;
+        case XSHADER_NA21:
+            fsh = InitShader(fragNV21, GL_FRAGMENT_SHADER);
+            break;
+        default:
+            XLOGE("InitShader GL_FRAGMENT_SHADER failed");
+            return false;
+    }
 
     if (fsh == 0){
         XLOGE("InitShader GL_FRAGMENT_SHADER failed");
