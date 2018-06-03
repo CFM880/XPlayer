@@ -21,28 +21,11 @@ public:
 //        XLOGI("TestObs size %d", d.size);
     }
 };
-
+IVideoView *view = NULL;
 extern "C"
 JNIEXPORT
 jint  JNI_OnLoad(JavaVM *vm, void *res){
     FFDecode::InitHard(vm);
-    return JNI_VERSION_1_4;
-}
-
-IVideoView *view = NULL;
-extern "C"
-JNIEXPORT jstring
-JNICALL
-Java_com_cfm880_xplay_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-
-    //XLOGI("S begin!");
-    //XSleep(3000);
-    //XLOGI("S end!");
-    //return env->NewStringUTF(hello.c_str());
-
     ///////////////////////////////////
     ///测试用代码
     TestObs *tobs = new TestObs();
@@ -85,6 +68,23 @@ Java_com_cfm880_xplay_MainActivity_stringFromJNI(
 
 
     }*/
+
+    return JNI_VERSION_1_4;
+}
+
+extern "C"
+JNIEXPORT jstring
+JNICALL
+Java_com_cfm880_xplay_MainActivity_stringFromJNI(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string hello = "Hello from C++";
+
+    //XLOGI("S begin!");
+    //XSleep(3000);
+    //XLOGI("S end!");
+    //return env->NewStringUTF(hello.c_str());
+
 
     return env->NewStringUTF(hello.c_str());
 }

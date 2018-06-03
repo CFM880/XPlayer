@@ -20,7 +20,7 @@ void FFDecode::InitHard(void *vm) {
     // 1. 查找解码器
     AVCodec *cd = avcodec_find_decoder(p->codec_id);
     if (isHard){
-        cd = avcodec_find_decoder_by_name("h264_medialcodec");
+        cd = avcodec_find_decoder_by_name("h264_mediacodec");
     }
     XLOGI("avcodec_find_decoder_by_name %d failed", isHard);
     if (!cd){
@@ -86,8 +86,9 @@ XData FFDecode::RecvFrame(){
         d.size = av_get_bytes_per_sample((AVSampleFormat)(frame->format)) * frame->nb_samples*2;
     }
     d.format = frame->format;
-    memcpy(d.datas, frame->data, sizeof(d.datas));
     if (isAudio)
         XLOGE("data format is %d", frame->format);
+    memcpy(d.datas, frame->data, sizeof(d.datas));
+
     return d;
 }

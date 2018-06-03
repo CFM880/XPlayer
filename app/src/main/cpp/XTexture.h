@@ -4,10 +4,11 @@
 
 #ifndef XPLAY_XTEXTURE_H
 #define XPLAY_XTEXTURE_H
+// 跟FFmpeg一致
 enum XTextureType{
     XTEXTURE_YUV420P = 0,   // Y 4 u 1 v1
-    XTEXTURE_NV12= 25,      // Y4 uv1
-    XTEXTURE_NV21 = 26
+    XTEXTURE_NV12= 25,      // Y4 uv 1
+    XTEXTURE_NV21 = 26      // Y4 vu 1
 };
 
 class XTexture {
