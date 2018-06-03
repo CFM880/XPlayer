@@ -18,6 +18,7 @@ struct XData {
     unsigned char *datas[8] = {0};
     int width =0;
     int height = 0;
+    int format = 0;
     int size = 0;
     void Drop();
     bool Alloc(int size, const char *d=0);

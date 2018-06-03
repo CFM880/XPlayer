@@ -7,14 +7,22 @@
 
 extern "C"{
 #include <libavcodec/avcodec.h>
+#include <libavcodec/jni.h>
+}
+void FFDecode::InitHard(void *vm) {
+    av_jni_set_java_vm(vm, 0);
 }
 
-bool FFDecode::Open(XParameter para) {
+ bool FFDecode::Open(XParameter para, bool isHard) {
     if (!para.para)
         return false;
     AVCodecParameters *p = para.para;
     // 1. 查找解码器
     AVCodec *cd = avcodec_find_decoder(p->codec_id);
+    if (isHard){
+        cd = avcodec_find_decoder_by_name("h264_medialcodec");
+    }
+    XLOGI("avcodec_find_decoder_by_name %d failed", isHard);
     if (!cd){
         XLOGE("avcodec_find_decoder %d failed", p->codec_id);
         return false;
@@ -77,7 +85,9 @@ XData FFDecode::RecvFrame(){
         // 样本大小 * 单通道样本数 * 通道数
         d.size = av_get_bytes_per_sample((AVSampleFormat)(frame->format)) * frame->nb_samples*2;
     }
+    d.format = frame->format;
     memcpy(d.datas, frame->data, sizeof(d.datas));
-
+    if (isAudio)
+        XLOGE("data format is %d", frame->format);
     return d;
 }

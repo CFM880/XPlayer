@@ -62,7 +62,7 @@ void SLAudioPlay::PlayCall(void *bufq){
         return;
     }
     memcpy(buf, d.data, d.size);
-    (*bf)->Enqueue(bf, d.data, d.size);
+    (*bf)->Enqueue(bf, buf, d.size);
     d.Drop();
 
 }

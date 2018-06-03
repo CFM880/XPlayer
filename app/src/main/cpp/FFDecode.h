@@ -12,7 +12,8 @@ struct  AVCodecContext;
 struct  AVFrame;
 class FFDecode: public IDecode {
 public:
-    bool Open(XParameter para);
+    static void InitHard(void *vm);
+    bool Open(XParameter para, bool isHard = false);
     // future模型，发送数据到线程解码
     bool SendPacket(XData pkt);
     // 从线程中获取解码结果,
