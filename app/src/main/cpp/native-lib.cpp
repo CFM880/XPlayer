@@ -14,6 +14,7 @@
 #include "FFResample.h"
 #include "IAudioPlay.h"
 #include "SLAudioPlay.h"
+#include "IPlayer.h"
 
 class TestObs : public IObserver{
 public:
@@ -27,20 +28,16 @@ JNIEXPORT
 jint  JNI_OnLoad(JavaVM *vm, void *res){
     FFDecode::InitHard(vm);
 
-
-    ///////////////////////////////////
-    ///测试用代码
-    TestObs *tobs = new TestObs();
     IDemux *de = new FFDemux();
     //de->AddObs(tobs);
-    de->Open("/sdcard/v1080.mp4");
+//    de->Open("/sdcard/v1080.mp4");
 
     IDecode *vdecode = new FFDecode();
     //vdecode->Open(de->GetVPara(), true);
-    vdecode->Open(de->GetVPara(), false);
+//    vdecode->Open(de->GetVPara(), false);
 
     IDecode *adecode = new FFDecode();
-    adecode->Open(de->GetAPara());
+//    adecode->Open(de->GetAPara());
     de->AddObs(vdecode);
     de->AddObs(adecode);
 
@@ -50,19 +47,27 @@ jint  JNI_OnLoad(JavaVM *vm, void *res){
     IResample *resample = new FFResample();
     XParameter outPara = de->GetAPara();
 
-    resample->Open(de->GetAPara(),outPara);
+//    resample->Open(de->GetAPara(),outPara);
     adecode->AddObs(resample);
 
     IAudioPlay *audioPlay = new SLAudioPlay();
-    audioPlay->StartPlay(outPara);
+//    audioPlay->StartPlay(outPara);
     resample->AddObs(audioPlay);
 
 
     //vdecode->Open();
-    de->Start();
-    vdecode->Start();
-    adecode->Start();
-
+    // de->Start();
+    // vdecode->Start();
+    // adecode->Start();
+    // 注入
+    IPlayer::Get()->demux = de;        // 解封装
+    IPlayer::Get()->adecode = adecode;
+    IPlayer::Get()->vdecode = vdecode;
+    IPlayer::Get()->videoView = view;
+    IPlayer::Get()->resample = resample;
+    IPlayer::Get()->audioPlay = audioPlay;
+    IPlayer::Get()->Open("/sdcard/v1080.mp4");
+    IPlayer::Get()->Start();
     return JNI_VERSION_1_4;
 }
 
@@ -87,10 +92,5 @@ JNIEXPORT void JNICALL
 Java_com_cfm880_xplay_XPlay_initView(JNIEnv *env, jobject instance,
                                                           jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
-    view->SetRender(win);
-//    XEGL::Get()->Init(win);
-//    XShader shader;
-//    shader.Init();
-
-//     view-
+    IPlayer::Get()->InitView(win);
 }

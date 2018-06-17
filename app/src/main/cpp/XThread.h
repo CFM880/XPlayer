@@ -11,7 +11,7 @@ void XSleep(int mis);
 class XThread {
 public:
     // 启动线程
-    virtual void  Start();
+    virtual bool  Start();
     // 通过isExit安全停止线程（不一定成功）
     virtual void  Stop();
     // 主函数入口
