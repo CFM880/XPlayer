@@ -68,3 +68,7 @@ void IPlayer::InitView(void *win) {
         videoView->SetRender(win);
     }
 }
+
+void IPlayer::InitHard(void *vm) {
+
+}

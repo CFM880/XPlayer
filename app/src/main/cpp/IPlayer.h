@@ -21,6 +21,8 @@ public:
     virtual bool Open(const char *path);
     virtual void InitView(void *win);
     virtual bool Start();
+    // 初始化硬件的时候
+    static void InitHard(void *vm);
     // 是否视频硬解码
     bool isHardDecode = true;
     // 音频输出参数

@@ -12,6 +12,7 @@
 // 解码接口，支持硬解码
 class IDecode: public IObserver {
 public:
+    static void InitHard(void *vm);
     // 打开解码器
     virtual bool Open(XParameter para, bool isHard = false) = 0;
     // future模型，发送数据到线程解码
