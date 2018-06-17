@@ -43,7 +43,7 @@ bool IPlayer::Open(const char *path){
         XLOGE(" resample->Open %s failed!", path);
     }
 //    if ()
-    return false;
+    return true;
 }
 bool IPlayer::Start(){
     if (!demux || !demux->Start()){
