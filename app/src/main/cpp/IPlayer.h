@@ -6,6 +6,7 @@
 #define XPLAY_IPLAYER_H
 
 #include <sys/types.h>
+#include <mutex>
 #include "XThread.h"
 #include "XParameter.h"
 
@@ -36,6 +37,9 @@ public:
     IAudioPlay *audioPlay = 0;
 
 protected:
+    // 用作音视频同步
+    void Main();
+    std::mutex mux;
     IPlayer(){}
 };
 

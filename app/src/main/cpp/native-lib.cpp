@@ -2,30 +2,16 @@
 #include <string>
 #include <android/native_window_jni.h>
 
-#include "FFDemux.h"
-#include "FFPlayerBuilder.h"
-#include "XLog.h"
+#include "IPlayerProxy.h"
 
-#include "XEGL.h"
-
-
-class TestObs : public IObserver{
-public:
-    void Update(XData d){
-//        XLOGI("TestObs size %d", d.size);
-    }
-};
-//IVideoView *view = NULL;
-static IPlayer *player = NULL;
 extern "C"
 JNIEXPORT
 jint  JNI_OnLoad(JavaVM *vm, void *res){
-    // FFDecode::InitHard(vm);
-    player = FFPlayerBuilder::Get()->BuiderPlayer();
-    FFPlayerBuilder::InitHard(vm);
 
-    player->Open("/sdcard/v1080.mp4");
-    player->Start();
+    IPlayerProxy::Get()->Init(vm);
+
+    IPlayerProxy::Get()->Open("/sdcard/v1080.mp4");
+    IPlayerProxy::Get()->Start();
     return JNI_VERSION_1_4;
 }
 
@@ -50,6 +36,5 @@ JNIEXPORT void JNICALL
 Java_com_cfm880_xplay_XPlay_initView(JNIEnv *env, jobject instance,
                                                           jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
-    if (player)
-        player->InitView(win);
+    IPlayerProxy::Get()->InitView(win);
 }
