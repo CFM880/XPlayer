@@ -10,11 +10,13 @@ enum XShaderType{
     XSHADER_NA21 = 26
 };
 
+#include <mutex>
 #include "XTexture.h"
 
 class XShader {
 public:
     virtual bool Init(XShaderType type = XSHADER_YUV420P);
+    virtual void Close();
     // 获取材质并映射到内存
     virtual void GetTexture(unsigned int index, int width, int height, unsigned char *buf, bool isa = false);
     virtual void Draw();
@@ -23,6 +25,7 @@ protected:
     unsigned int fsh = 0;
     unsigned int program = 0;
     unsigned int texts[100] = {0};//清理
+    std::mutex mux;
 };
 
 
