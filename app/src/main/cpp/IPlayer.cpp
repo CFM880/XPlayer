@@ -33,12 +33,60 @@ IPlayer* IPlayer::Get(unsigned char index) {
     static IPlayer p[256];
     return &p[index];
 }
+
+void  IPlayer::Close() {
+    mux.lock();
+    //1.先关闭主体，再清理观察者
+    // 同步线程
+    XThread::Stop();
+    // 解封清理
+    if (demux){
+        demux->Stop();
+    }
+    // 解码清理
+    if (vdecode){
+        vdecode->Stop();
+    }
+    if (adecode){
+        adecode->Stop();
+    }
+
+    //2.清理缓冲队列
+    if (vdecode){
+        vdecode->Clear();
+    }
+    if (adecode){
+        adecode->Clear();
+    }
+    if (audioPlay){
+        audioPlay->Clear();
+    }
+    //3.清理资源
+    if (audioPlay){
+        audioPlay->Close();
+    }
+    if (videoView){
+        videoView->Close();
+    }
+    if (vdecode){
+        vdecode->Close();
+    }
+    if (adecode){
+        adecode->Close();
+    }
+    if (demux){
+        demux->Close();
+    }
+    mux.unlock();
+
+}
 /**
  * 打开和开始分开
  * @param path
  * @return
  */
 bool IPlayer::Open(const char *path){
+    Close();
     mux.lock();
     if (!demux || !demux->Open(path)){
         XLOGE("dmeux->Open %s failed!", path);
@@ -67,21 +115,31 @@ bool IPlayer::Open(const char *path){
     mux.unlock();
     return true;
 }
+/**
+ * 先启动解码线程
+ * 和音频播放视频
+ * 如果解封装先启动
+ * 而解码器未启动会直接丢掉前面解码的内容
+ * @return
+ */
 bool IPlayer::Start(){
+
+    if (audioPlay){
+        audioPlay->StartPlay(outPara);
+    }
+
+    if (vdecode){
+        vdecode->Start();
+    }
+
+    if (adecode){
+        adecode->Start();
+    }
     mux.lock();
     if (!demux || !demux->Start()){
         XLOGE("demex->Start failed");
         mux.unlock();
         return false;
-    }
-    if (adecode){
-        adecode->Start();
-    }
-    if (audioPlay){
-        audioPlay->StartPlay(outPara);
-    }
-    if (vdecode){
-        vdecode->Start();
     }
     XThread::Start();
     mux.unlock();

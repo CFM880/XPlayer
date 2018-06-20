@@ -20,6 +20,7 @@ public:
     virtual XData GetData();
 
     virtual void Close() = 0;
+    virtual void Clear();
 
     // 最大帧数
     int maxFrame = 100;

@@ -20,6 +20,7 @@ class IPlayer : public XThread {
 public:
     static IPlayer *Get(unsigned char index = 0);
     virtual bool Open(const char *path);
+    virtual void Close();
     virtual void InitView(void *win);
     virtual bool Start();
     // 初始化硬件的时候

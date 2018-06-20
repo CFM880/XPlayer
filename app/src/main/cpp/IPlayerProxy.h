@@ -17,6 +17,7 @@ public:
     }
     virtual void Init(void *vm);
     virtual bool Open(const char *path);
+    virtual void Close();
     virtual void InitView(void *win);
     virtual bool Start();
 
